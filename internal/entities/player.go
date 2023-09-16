@@ -15,7 +15,9 @@ import (
 
 
 const (
-    movementSpeed = 10
+    acceleration = 100
+    maxSpeed = 500
+    dragCoefficient = 0.85
 )
 
 
@@ -42,13 +44,24 @@ func (p *Player) Update() {
         direction.X++
     }
 
+    // If the direction vector is empty (no inputs from the player)
+    // we add drag to the players velocity and returns
     if direction.Length() == 0 {
+        velocityAfterDrag := p.Body.Velocity().Mult(dragCoefficient)
+        p.Body.SetVelocityVector(velocityAfterDrag)
         return
     }
 
     // Normalize the direction vector to make sure the player moves at a 
     // constant speed, even when moving diagonally
-    p.Body.SetPosition(p.Body.Position().Add(direction.Normalize().Mult(movementSpeed)))
+    newVelocity := p.Body.Velocity().Add(direction.Normalize().Mult(acceleration))
+
+    // Make sure the new veoloctiy does not exceed the max speed for the player
+    if newVelocity.Length() > maxSpeed {
+        newVelocity = newVelocity.Normalize().Mult(maxSpeed)
+    }
+
+    p.Body.SetVelocityVector(newVelocity)
 }
 
 
