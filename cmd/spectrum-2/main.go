@@ -10,7 +10,6 @@ import (
 type Game struct{
     Space *cp.Space
     Ents []entities.Entity
-    time float64
 }
 
 
@@ -20,7 +19,6 @@ func (g *Game) Update(screen *ebiten.Image) error {
     }
 
     timeStep := 1.0 / float64(ebiten.MaxTPS())
-	g.time += timeStep
 	g.Space.Step(timeStep)
 
 	return nil
