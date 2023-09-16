@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/hajimehoshi/ebiten"
 	"github.com/jakecoffman/cp"
-	"github.com/kaspetti/spectrum2/internal/entities"
+	"github.com/kaspetti/spectrum-2/internal/entities"
 )
 
 

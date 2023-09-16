@@ -27,7 +27,7 @@ type Player struct {
 }
 
 
-// Updates the player each frame
+// Update updates the player each frame
 func (p *Player) Update() {
     direction := cp.Vector{}
 
@@ -65,7 +65,7 @@ func (p *Player) Update() {
 }
 
 
-// Draws the player sprite to the screen according to the properties of
+// Draw draws the player sprite to the screen according to the properties of
 // the body of the player.
 func (p *Player) Draw(screen *ebiten.Image) {
     options := ebiten.DrawImageOptions{}
@@ -76,7 +76,7 @@ func (p *Player) Draw(screen *ebiten.Image) {
 }
 
 
-// Creates a new player with the given body and image path. 
+// NewPlayer creates a new player with the given body and image path. 
 // Returns an error if the body is nil or if the sprite cannot 
 // be loaded with the given image path. Use this function to make sure the 
 // body and image of the player is properly instantiated.

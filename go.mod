@@ -1,4 +1,4 @@
-module github.com/kaspetti/spectrum2
+module github.com/kaspetti/spectrum-2
 
 go 1.19
 
