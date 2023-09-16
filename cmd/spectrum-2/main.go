@@ -1,9 +1,6 @@
 package main
 
 import (
-	"image/png"
-	"os"
-
 	"github.com/hajimehoshi/ebiten"
 	"github.com/jakecoffman/cp"
 	"github.com/kaspetti/spectrum2/internal/entities"
@@ -11,6 +8,7 @@ import (
 
 
 type Game struct{
+    space *cp.Space
     ents []entities.Entity
 }
 
@@ -32,26 +30,18 @@ func (g *Game) Draw(screen *ebiten.Image) {
 
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
-    return 320, 240
+    return outsideWidth, outsideHeight
 }
 
 
 func main() {
-    ebiten.SetWindowSize(640, 480)
+    ebiten.SetWindowSize(1280, 720)
     ebiten.SetWindowTitle("Spectrum 2")
     game := &Game{}
 
     body := cp.NewKinematicBody()
-    f, err := os.Open("assets/epicimage.png")
-    if err != nil {
-        panic(err)
-    }
-    img, err := png.Decode(f)
-    if err != nil {
-        panic(err)
-    }
 
-    player, err := entities.NewPlayer(body, &img)
+    player, err := entities.NewPlayer(body, "assets/epicimage.png")
     if err != nil {
         panic(err)
     }

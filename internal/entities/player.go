@@ -1,11 +1,13 @@
 package entities
-// Script containing functionality for the player. Player satisfies the Entity interface 
-// as it implements the Update and Draw function. These are used in the game to render and 
+
+// Script containing functionality for the player. Player satisfies the Entity interface
+// as it implements the Update and Draw function. These are used in the game to render and
 // run game logic for the player.
 
 import (
 	"errors"
-	"image"
+	"image/png"
+	"os"
 
 	"github.com/hajimehoshi/ebiten"
 	"github.com/jakecoffman/cp"
@@ -13,7 +15,7 @@ import (
 
 
 const (
-    movementSpeed = 5
+    movementSpeed = 10
 )
 
 
@@ -61,15 +63,28 @@ func (p *Player) Draw(screen *ebiten.Image) {
 }
 
 
-// Creates a new player with the given body and image(sprite). This function returns an 
-// error if either the body or the image is 'nil'. Use this function to make sure the 
+// Creates a new player with the given body and image path. 
+// Returns an error if the body is nil or if the sprite cannot 
+// be loaded with the given image path. Use this function to make sure the 
 // body and image of the player is properly instantiated.
-func NewPlayer(body *cp.Body, img *image.Image) (*Player, error) {
-    if body == nil || img == nil {
-        return nil, errors.New("body or img is nil")
+func NewPlayer(body *cp.Body, imgPath string) (*Player, error) {
+    if body == nil {
+        return nil, errors.New("Provided body of player is nil")
     }
 
-    sprite, err := ebiten.NewImageFromImage(*img, ebiten.FilterDefault)    
+    // Load sprite to image
+    f, err := os.Open(imgPath)
+    if err != nil {
+        return nil, err
+    }
+    defer f.Close()
+
+    img, err := png.Decode(f)
+    if err != nil {
+        return nil, err
+    }
+
+    sprite, err := ebiten.NewImageFromImage(img, ebiten.FilterDefault)    
     if err != nil {
         return nil, err
     }
