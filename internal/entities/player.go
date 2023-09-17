@@ -5,7 +5,6 @@ package entities
 // run game logic for the player.
 
 import (
-	"errors"
 	"image/png"
 	"os"
 
@@ -24,6 +23,7 @@ const (
 type Player struct {
     Body *cp.Body
     Sprite *ebiten.Image
+    Shape *cp.Shape
 }
 
 
@@ -69,10 +69,18 @@ func (p *Player) Update() {
 // the body of the player.
 func (p *Player) Draw(screen *ebiten.Image) {
     options := ebiten.DrawImageOptions{}
-    options.GeoM.Translate(p.Body.Position().X, p.Body.Position().Y)
+
+    x := p.Shape.BB().L
+    y := p.Shape.BB().B
+    options.GeoM.Translate(x, y)
     // TODO: Set sprite scale according to physics simulation
 
     screen.DrawImage(p.Sprite, &options)
+}
+
+
+func (p *Player) GetBB() cp.BB {
+    return p.Shape.BB()
 }
 
 
@@ -80,17 +88,14 @@ func (p *Player) Draw(screen *ebiten.Image) {
 // Returns an error if the body is nil or if the sprite cannot 
 // be loaded with the given image path. Use this function to make sure the 
 // body and image of the player is properly instantiated.
-func NewPlayer(body *cp.Body, imgPath string) (*Player, error) {
-    if body == nil {
-        return nil, errors.New("Provided body of player is nil")
-    }
-
+func NewPlayer(space *cp.Space, imgPath string) (*Player, error) {
     // Load sprite to image
     f, err := os.Open(imgPath)
     if err != nil {
         return nil, err
     }
     defer f.Close()
+
 
     img, err := png.Decode(f)
     if err != nil {
@@ -102,8 +107,15 @@ func NewPlayer(body *cp.Body, imgPath string) (*Player, error) {
         return nil, err
     }
 
+    body := cp.NewKinematicBody()
+    shape := cp.NewBox(body, float64(img.Bounds().Dx()), float64(img.Bounds().Dy()), 0)
+
+    space.AddBody(body)
+    space.AddShape(shape)
+
     return &Player{
         Body: body,
         Sprite: sprite,
+        Shape: shape,
     }, nil
 }
