@@ -6,6 +6,7 @@ package entities
 
 import (
 	"image/png"
+	"math"
 	"os"
 
 	"github.com/hajimehoshi/ebiten"
@@ -14,8 +15,8 @@ import (
 
 
 const (
-    acceleration = 100
-    maxSpeed = 500
+    acceleration = 5000
+    maxSpeed = 750
     dragCoefficient = 0.85
 )
 
@@ -29,39 +30,37 @@ type Player struct {
 
 // Update updates the player each frame
 func (p *Player) Update() {
+    // inside your Update method
     direction := cp.Vector{}
 
-    if (ebiten.IsKeyPressed(ebiten.KeyW)) {
+    if ebiten.IsKeyPressed(ebiten.KeyW) {
         direction.Y--
     }
-    if (ebiten.IsKeyPressed(ebiten.KeyS)) {
+    if ebiten.IsKeyPressed(ebiten.KeyS) {
         direction.Y++
     }
-    if (ebiten.IsKeyPressed(ebiten.KeyA)) {
+    if ebiten.IsKeyPressed(ebiten.KeyA) {
         direction.X--
     }
-    if (ebiten.IsKeyPressed(ebiten.KeyD)) {
+    if ebiten.IsKeyPressed(ebiten.KeyD) {
         direction.X++
     }
 
-    // If the direction vector is empty (no inputs from the player)
-    // we add drag to the players velocity
-    if direction.Length() == 0 {
+    // Apply a force based on direction. The force is typically proportional to the body's mass
+    // to ensure consistent movement behavior.
+    if direction.Length() != 0 {
+        force := direction.Normalize().Mult(acceleration * p.Body.Mass())
+        p.Body.ApplyForceAtLocalPoint(force, cp.Vector{})
+    } else {
+        // Apply some form of drag or damping to reduce velocity
         velocityAfterDrag := p.Body.Velocity().Mult(dragCoefficient)
         p.Body.SetVelocityVector(velocityAfterDrag)
-    } else {
-        // Normalize the direction vector to make sure the player moves at a 
-        // constant speed, even when moving diagonally
-        newVelocity := p.Body.Velocity().Add(direction.Normalize().Mult(acceleration))
-        p.Body.SetVelocityVector(newVelocity)
     }
-
 
     // Make sure the velocity does not exceed the max speed for the player
     if p.Body.Velocity().Length() > maxSpeed {
         p.Body.SetVelocityVector(p.Body.Velocity().Normalize().Mult(maxSpeed))
     }
-
 }
 
 
@@ -73,6 +72,8 @@ func (p *Player) Draw(screen *ebiten.Image) {
     x := p.Shape.BB().L
     y := p.Shape.BB().B
     options.GeoM.Translate(x, y)
+
+
     // TODO: Set sprite scale according to physics simulation
 
     screen.DrawImage(p.Sprite, &options)
@@ -107,7 +108,7 @@ func NewPlayer(space *cp.Space, imgPath string) (*Player, error) {
         return nil, err
     }
 
-    body := space.AddBody(cp.NewKinematicBody())
+    body := space.AddBody(cp.NewBody(1, math.Inf(1)))
     shape := space.AddShape(
         cp.NewBox(body, float64(img.Bounds().Dx()), float64(img.Bounds().Dy()), 0),
     )

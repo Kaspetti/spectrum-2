@@ -7,6 +7,7 @@ import (
 	"github.com/hajimehoshi/ebiten/ebitenutil"
 	"github.com/jakecoffman/cp"
 	"github.com/kaspetti/spectrum-2/internal/entities"
+	"github.com/kaspetti/spectrum-2/internal/objects"
 )
 
 
@@ -18,12 +19,16 @@ const (
 type Game struct{
     Space *cp.Space
     Ents []entities.Entity
+    Objects []objects.Object
 }
 
 
 func (g *Game) Update(screen *ebiten.Image) error {
     for _, ent := range g.Ents {
         ent.Update()
+    }
+    for _, obj := range g.Objects {
+        obj.Update()
     }
 
     timeStep := 1.0 / float64(ebiten.MaxTPS())
@@ -39,6 +44,14 @@ func (g *Game) Draw(screen *ebiten.Image) {
 
         if debug {
             drawShape(screen, ent)
+        }
+    }
+
+    for _, obj := range g.Objects {
+        obj.Draw(screen)
+
+        if debug {
+            drawShape(screen, obj)
         }
     }
 }
@@ -57,15 +70,24 @@ func newGame() *Game {
         panic(err)
     }
 
+    object, err := objects.NewObject(space, "assets/testobject.png")
+    if err != nil {
+        panic(err)
+    }
+
     return &Game {
         Space: space,
         Ents: []entities.Entity{
             player,
         },
+        Objects: []objects.Object{
+            object,
+        },
     }
 }
 
 
+// TODO: Change entities and objects to inherit from same interface
 func drawShape(screen *ebiten.Image, player entities.Entity) {
     x1 := player.GetBB().L
     x2 := player.GetBB().R
