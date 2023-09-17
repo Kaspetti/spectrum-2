@@ -49,7 +49,7 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeigh
 }
 
 
-func NewGame() *Game {
+func newGame() *Game {
     space := cp.NewSpace()
 
     player, err := entities.NewPlayer(space, "assets/epicimage.png")
@@ -83,7 +83,7 @@ func main() {
     ebiten.SetWindowSize(1280, 720)
     ebiten.SetWindowTitle("Spectrum 2")
 
-    game := NewGame()
+    game := newGame()
 
     if err := ebiten.RunGame(game); err != nil {
         panic(err)

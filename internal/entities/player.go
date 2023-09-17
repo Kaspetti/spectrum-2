@@ -84,8 +84,8 @@ func (p *Player) GetBB() cp.BB {
 }
 
 
-// NewPlayer creates a new player with the given body and image path. 
-// Returns an error if the body is nil or if the sprite cannot 
+// NewPlayer creates a new player with the given image path. 
+// Returns an error if the sprite cannot 
 // be loaded with the given image path. Use this function to make sure the 
 // body and image of the player is properly instantiated.
 func NewPlayer(space *cp.Space, imgPath string) (*Player, error) {
@@ -107,11 +107,10 @@ func NewPlayer(space *cp.Space, imgPath string) (*Player, error) {
         return nil, err
     }
 
-    body := cp.NewKinematicBody()
-    shape := cp.NewBox(body, float64(img.Bounds().Dx()), float64(img.Bounds().Dy()), 0)
-
-    space.AddBody(body)
-    space.AddShape(shape)
+    body := space.AddBody(cp.NewKinematicBody())
+    shape := space.AddShape(
+        cp.NewBox(body, float64(img.Bounds().Dx()), float64(img.Bounds().Dy()), 0),
+    )
 
     return &Player{
         Body: body,
