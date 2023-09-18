@@ -5,13 +5,11 @@ package dynamic
 // run game logic for the player.
 
 import (
-	"fmt"
 	"image/png"
 	"math"
 	"os"
 
 	"github.com/hajimehoshi/ebiten"
-	"github.com/hajimehoshi/ebiten/inpututil"
 	"github.com/jakecoffman/cp"
 )
 
@@ -26,7 +24,6 @@ const (
 type Player struct {
     Body *cp.Body
     Sprite *ebiten.Image
-    Shape *cp.Shape
 }
 
 
@@ -46,14 +43,6 @@ func (p *Player) Update() {
     }
     if ebiten.IsKeyPressed(ebiten.KeyD) {
         direction.X++
-    }
-
-    
-    // Debug
-    if inpututil.IsKeyJustPressed(ebiten.KeySpace) {
-        p.Body.EachShape(func(s *cp.Shape) {
-            fmt.Printf("Shape: %v\n", s.BB())
-        })
     }
 
     // Apply a force based on direction. The force is typically proportional to the body's mass
@@ -79,9 +68,9 @@ func (p *Player) Update() {
 func (p *Player) Draw(screen *ebiten.Image) {
     options := ebiten.DrawImageOptions{}
 
-    // TODO: Her har du vært dumma, dette må du endre!
-    x := p.Shape.BB().L
-    y := p.Shape.BB().B
+    width, height := p.Sprite.Size()
+    x := p.Body.Position().X-float64(width)/2.0
+    y := p.Body.Position().Y-float64(height)/2.0
     options.GeoM.Translate(x, y)
 
     screen.DrawImage(p.Sprite, &options)
@@ -117,13 +106,12 @@ func NewPlayer(space *cp.Space, imgPath string) (*Player, error) {
     }
 
     body := space.AddBody(cp.NewBody(1, math.Inf(1)))
-    shape := space.AddShape(
+    space.AddShape(
         cp.NewBox(body, float64(img.Bounds().Dx()), float64(img.Bounds().Dy()), 0),
     )
 
     return &Player{
         Body: body,
         Sprite: sprite,
-        Shape: shape,
     }, nil
 }

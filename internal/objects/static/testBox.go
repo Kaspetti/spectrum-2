@@ -11,7 +11,6 @@ import (
 
 type TestObject struct {
     Body *cp.Body
-    Shape *cp.Shape
     Sprite *ebiten.Image
 }
 
@@ -23,13 +22,10 @@ func (to *TestObject) Update() {
 func (to *TestObject) Draw(screen *ebiten.Image) {
     options := ebiten.DrawImageOptions{}
 
-    x := to.Shape.BB().L
-    y := to.Shape.BB().B
+    width, height := to.Sprite.Size()
+    x := to.Body.Position().X-float64(width)/2
+    y := to.Body.Position().Y-float64(height)/2
     options.GeoM.Translate(x, y)
-
-
-    //fmt.Printf("x: %v | y: %v\n", x, y)
-    // TODO: Set sprite scale according to physics simulation
 
     screen.DrawImage(to.Sprite, &options)
 
@@ -67,7 +63,7 @@ func NewObject(space *cp.Space, spritePath string) (*TestObject, error) {
     })
     space.AddBody(body)
 
-    shape := space.AddShape(
+    space.AddShape(
         cp.NewBox(body, float64(img.Bounds().Dx()), float64(img.Bounds().Dy()), 0),
     )
 
@@ -75,6 +71,5 @@ func NewObject(space *cp.Space, spritePath string) (*TestObject, error) {
     return &TestObject{
         Body: body,
         Sprite: sprite,
-        Shape: shape,
     }, nil
 }  
