@@ -6,8 +6,9 @@ import (
 	"github.com/hajimehoshi/ebiten"
 	"github.com/hajimehoshi/ebiten/ebitenutil"
 	"github.com/jakecoffman/cp"
-	"github.com/kaspetti/spectrum-2/internal/entities"
 	"github.com/kaspetti/spectrum-2/internal/objects"
+	"github.com/kaspetti/spectrum-2/internal/objects/dynamic"
+	"github.com/kaspetti/spectrum-2/internal/objects/static"
 )
 
 
@@ -18,15 +19,11 @@ const (
 
 type Game struct{
     Space *cp.Space
-    Ents []entities.Entity
     Objects []objects.Object
 }
 
 
 func (g *Game) Update(screen *ebiten.Image) error {
-    for _, ent := range g.Ents {
-        ent.Update()
-    }
     for _, obj := range g.Objects {
         obj.Update()
     }
@@ -39,14 +36,6 @@ func (g *Game) Update(screen *ebiten.Image) error {
 
 
 func (g *Game) Draw(screen *ebiten.Image) {
-    for _, ent := range g.Ents {
-        ent.Draw(screen)
-
-        if debug {
-            drawShape(screen, ent)
-        }
-    }
-
     for _, obj := range g.Objects {
         obj.Draw(screen)
 
@@ -65,22 +54,20 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeigh
 func newGame() *Game {
     space := cp.NewSpace()
 
-    player, err := entities.NewPlayer(space, "assets/epicimage.png")
+    player, err := dynamic.NewPlayer(space, "assets/epicimage.png")
     if err != nil {
         panic(err)
     }
 
-    object, err := objects.NewObject(space, "assets/testobject.png")
+    object, err := static.NewObject(space, "assets/testobject.png")
     if err != nil {
         panic(err)
     }
 
     return &Game {
         Space: space,
-        Ents: []entities.Entity{
-            player,
-        },
         Objects: []objects.Object{
+            player,
             object,
         },
     }
@@ -88,11 +75,11 @@ func newGame() *Game {
 
 
 // TODO: Change entities and objects to inherit from same interface
-func drawShape(screen *ebiten.Image, player entities.Entity) {
-    x1 := player.GetBB().L
-    x2 := player.GetBB().R
-    y1 := player.GetBB().B
-    y2 := player.GetBB().T
+func drawShape(screen *ebiten.Image, object objects.Object) {
+    x1 := object.GetBB().L
+    x2 := object.GetBB().R
+    y1 := object.GetBB().B
+    y2 := object.GetBB().T
 
     ebitenutil.DrawLine(screen, x1, y1, x2, y1, color.RGBA{0, 255, 0, 255})
     ebitenutil.DrawLine(screen, x2, y1, x2, y2, color.RGBA{0, 255, 0, 255})

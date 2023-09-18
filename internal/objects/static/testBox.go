@@ -1,4 +1,4 @@
-package objects
+package static
 
 import (
 	"image/png"
@@ -7,15 +7,6 @@ import (
 	"github.com/hajimehoshi/ebiten"
 	"github.com/jakecoffman/cp"
 )
-
-
-type Object interface {
-    Update()
-
-    Draw(screen *ebiten.Image)
-
-    GetBB() cp.BB
-}
 
 
 type TestObject struct {

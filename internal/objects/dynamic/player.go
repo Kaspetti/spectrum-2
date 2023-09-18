@@ -1,4 +1,4 @@
-package entities
+package dynamic
 
 // Script containing functionality for the player. Player satisfies the Entity interface
 // as it implements the Update and Draw function. These are used in the game to render and
@@ -49,7 +49,7 @@ func (p *Player) Update() {
     // Apply a force based on direction. The force is typically proportional to the body's mass
     // to ensure consistent movement behavior.
     if direction.Length() != 0 {
-        force := direction.Normalize().Mult(acceleration * p.Body.Mass())
+        force := direction.Normalize().Mult(acceleration)
         p.Body.ApplyForceAtLocalPoint(force, cp.Vector{})
     } else {
         // Apply some form of drag or damping to reduce velocity
