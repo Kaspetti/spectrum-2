@@ -7,7 +7,7 @@
 * [ ] Scaling of Objects
 * [ ] Basic Player Attack
 * [ ] Basic NPC Logic
-* [ ] Collisions/Triggers
+* [x] Collisions/Triggers
 * [ ] Changing Rooms
 * [ ] Basic UI
 * [ ] Scoring

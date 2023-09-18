@@ -1,6 +1,8 @@
 package static
 
 import (
+	"fmt"
+
 	"github.com/hajimehoshi/ebiten"
 	"github.com/jakecoffman/cp"
 	"github.com/kaspetti/spectrum-2/internal/objects"
@@ -39,9 +41,14 @@ func NewTrigger(space *cp.Space, position cp.Vector, dimensions cp.Vector) *Test
 
     space.AddBody(body)
     shape := space.AddShape(cp.NewBox2(body, bb, 0))
+    shape.SetCollisionType(objects.Trigger)
     shape.SetSensor(true)
 
-    space.NewCollisionHandler(objects.Trigger, objects.Collider)
+    space.NewCollisionHandler(objects.Trigger, objects.Collider).BeginFunc = 
+        func(arb *cp.Arbiter, space *cp.Space, userData interface{}) bool {
+            fmt.Println("Test")
+            return false
+        } 
 
     return &TestTrigger {
         Body: body,

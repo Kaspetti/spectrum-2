@@ -11,6 +11,7 @@ import (
 
 	"github.com/hajimehoshi/ebiten"
 	"github.com/jakecoffman/cp"
+	"github.com/kaspetti/spectrum-2/internal/objects"
 )
 
 
@@ -106,9 +107,10 @@ func NewPlayer(space *cp.Space, imgPath string) (*Player, error) {
     }
 
     body := space.AddBody(cp.NewBody(1, math.Inf(1)))
-    space.AddShape(
+    shape := space.AddShape(
         cp.NewBox(body, float64(img.Bounds().Dx()), float64(img.Bounds().Dy()), 0),
     )
+    shape.SetCollisionType(objects.Collider)
 
     return &Player{
         Body: body,

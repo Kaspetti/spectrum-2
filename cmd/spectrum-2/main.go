@@ -67,8 +67,8 @@ func newGame() *Game {
     trigger := static.NewTrigger(
         space,
         cp.Vector{
-            X: 100,
-            Y: 100,
+            X: 500,
+            Y: 500,
         },
         cp.Vector{
             X: 50,
@@ -83,8 +83,6 @@ func newGame() *Game {
             object,
             trigger,
         },
-        Trigger: 0,
-        Collider: 1,
     }
 }
 

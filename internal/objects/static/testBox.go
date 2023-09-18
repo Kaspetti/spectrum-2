@@ -6,6 +6,7 @@ import (
 
 	"github.com/hajimehoshi/ebiten"
 	"github.com/jakecoffman/cp"
+	"github.com/kaspetti/spectrum-2/internal/objects"
 )
 
 
@@ -63,9 +64,10 @@ func NewObject(space *cp.Space, spritePath string) (*TestObject, error) {
     })
     space.AddBody(body)
 
-    space.AddShape(
+    shape := space.AddShape(
         cp.NewBox(body, float64(img.Bounds().Dx()), float64(img.Bounds().Dy()), 0),
     )
+    shape.SetCollisionType(objects.Collider)
 
 
     return &TestObject{
