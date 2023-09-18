@@ -36,8 +36,8 @@ func (to *TestObject) Draw(screen *ebiten.Image) {
 }
 
 
-func (to *TestObject) GetBB() cp.BB {
-    return to.Shape.BB()
+func (to *TestObject) GetBody() *cp.Body {
+    return to.Body
 }
 
 

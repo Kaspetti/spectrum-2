@@ -1,6 +1,6 @@
 module github.com/kaspetti/spectrum-2
 
-go 1.20
+go 1.19
 
 require github.com/jakecoffman/cp v1.2.1
 

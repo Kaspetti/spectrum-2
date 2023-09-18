@@ -11,5 +11,5 @@ type Object interface {
 
     Draw(*ebiten.Image)
 
-    GetBB() cp.BB
+    GetBody() *cp.Body 
 }

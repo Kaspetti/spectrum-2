@@ -76,15 +76,20 @@ func newGame() *Game {
 
 // TODO: Change entities and objects to inherit from same interface
 func drawShape(screen *ebiten.Image, object objects.Object) {
-    x1 := object.GetBB().L
-    x2 := object.GetBB().R
-    y1 := object.GetBB().B
-    y2 := object.GetBB().T
+    object.GetBody().EachShape(func(s *cp.Shape) {
+        bb := s.BB()
 
-    ebitenutil.DrawLine(screen, x1, y1, x2, y1, color.RGBA{0, 255, 0, 255})
-    ebitenutil.DrawLine(screen, x2, y1, x2, y2, color.RGBA{0, 255, 0, 255})
-    ebitenutil.DrawLine(screen, x2, y2, x1, y2, color.RGBA{0, 255, 0, 255})
-    ebitenutil.DrawLine(screen, x1, y2, x1, y1, color.RGBA{0, 255, 0, 255})
+        x1 := bb.L
+        x2 := bb.R
+        y1 := bb.B
+        y2 := bb.T
+
+        ebitenutil.DrawLine(screen, x1, y1, x2, y1, color.RGBA{0, 255, 0, 255})
+        ebitenutil.DrawLine(screen, x2, y1, x2, y2, color.RGBA{0, 255, 0, 255})
+        ebitenutil.DrawLine(screen, x2, y2, x1, y2, color.RGBA{0, 255, 0, 255})
+        ebitenutil.DrawLine(screen, x1, y2, x1, y1, color.RGBA{0, 255, 0, 255})
+    })
+
 }
 
 

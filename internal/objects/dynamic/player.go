@@ -5,11 +5,13 @@ package dynamic
 // run game logic for the player.
 
 import (
+	"fmt"
 	"image/png"
 	"math"
 	"os"
 
 	"github.com/hajimehoshi/ebiten"
+	"github.com/hajimehoshi/ebiten/inpututil"
 	"github.com/jakecoffman/cp"
 )
 
@@ -46,6 +48,14 @@ func (p *Player) Update() {
         direction.X++
     }
 
+    
+    // Debug
+    if inpututil.IsKeyJustPressed(ebiten.KeySpace) {
+        p.Body.EachShape(func(s *cp.Shape) {
+            fmt.Printf("Shape: %v\n", s.BB())
+        })
+    }
+
     // Apply a force based on direction. The force is typically proportional to the body's mass
     // to ensure consistent movement behavior.
     if direction.Length() != 0 {
@@ -69,19 +79,17 @@ func (p *Player) Update() {
 func (p *Player) Draw(screen *ebiten.Image) {
     options := ebiten.DrawImageOptions{}
 
+    // TODO: Her har du vært dumma, dette må du endre!
     x := p.Shape.BB().L
     y := p.Shape.BB().B
     options.GeoM.Translate(x, y)
-
-
-    // TODO: Set sprite scale according to physics simulation
 
     screen.DrawImage(p.Sprite, &options)
 }
 
 
-func (p *Player) GetBB() cp.BB {
-    return p.Shape.BB()
+func (p *Player) GetBody() *cp.Body {
+    return p.Body
 }
 
 
