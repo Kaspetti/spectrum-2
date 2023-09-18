@@ -5,6 +5,11 @@ import (
 	"github.com/jakecoffman/cp"
 )
 
+const (
+    // Collision Types
+    Trigger = 0
+    Collider = 1
+)
 
 type Object interface {
     Update()

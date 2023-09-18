@@ -64,12 +64,27 @@ func newGame() *Game {
         panic(err)
     }
 
+    trigger := static.NewTrigger(
+        space,
+        cp.Vector{
+            X: 100,
+            Y: 100,
+        },
+        cp.Vector{
+            X: 50,
+            Y: 50,
+        } ,
+    )
+
     return &Game {
         Space: space,
         Objects: []objects.Object{
             player,
             object,
+            trigger,
         },
+        Trigger: 0,
+        Collider: 1,
     }
 }
 
@@ -89,7 +104,6 @@ func drawShape(screen *ebiten.Image, object objects.Object) {
         ebitenutil.DrawLine(screen, x2, y2, x1, y2, color.RGBA{0, 255, 0, 255})
         ebitenutil.DrawLine(screen, x1, y2, x1, y1, color.RGBA{0, 255, 0, 255})
     })
-
 }
 
 
