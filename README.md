@@ -4,6 +4,7 @@
 * [x] Non-Scaling Window
 * [x] Physics Space
 * [x] Player Movement
+* [ ] Scaling of Objects
 * [ ] Basic Player Attack
 * [ ] Basic NPC Logic
 * [ ] Collisions/Triggers
